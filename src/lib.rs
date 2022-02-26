@@ -235,7 +235,7 @@ where
         (self.di, self.rst)
     }
 
-    fn write_command(&mut self, command: Instruction) -> Result<(), Error<PinE>> {
+    pub fn write_command(&mut self, command: Instruction) -> Result<(), Error<PinE>> {
         self.di
             .send_commands(U8Iter(&mut once(command as u8)))
             .map_err(|_| Error::DisplayError)?;
@@ -248,8 +248,15 @@ where
             .map_err(|_| Error::DisplayError)
     }
 
+
+    pub fn write_data_slice(&mut self, data: &[u8]) -> Result<(), Error<PinE>> {
+        self.di
+            .send_data(display_interface::DataFormat::U8(data))
+            .map_err(|_| {Error::DisplayError})
+    }
+
     // Sets the address window for the display.
-    fn set_address_window(
+    pub fn set_address_window(
         &mut self,
         sx: u16,
         sy: u16,
